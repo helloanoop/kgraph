@@ -1,4 +1,4 @@
-# notebase
+# hypergrah
 Notetaking app that works on top of a local folder of yml files
 
 ## 👨‍💻 status
