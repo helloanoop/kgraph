@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
 
-const useNotebaseTreeSync = () => {
+const useHypergraphTreeSync = () => {
   useEffect(() => {
     const { ipcRenderer } = window;
 
-    const _openNotebase = (pathname, uid) => {
-      console.log(`notebase uid: ${uid}, pathname: ${pathname}`);
+    const _openHypergraph = (pathname, uid) => {
+      console.log(`hypergraph uid: ${uid}, pathname: ${pathname}`);
       // todo
     };
 
@@ -29,15 +29,15 @@ const useNotebaseTreeSync = () => {
       }
     };
 
-    const _notebaseRemoved = (pathname) => {
+    const _hypergraphRemoved = (pathname) => {
       // todo
     };
 
     ipcRenderer.invoke('renderer:ready');
 
-    const removeListener1 = ipcRenderer.on('main:notebase-opened', _openNotebase);
-    const removeListener2 = ipcRenderer.on('main:notebase-tree-updated', _collectionTreeUpdated);
-    const removeListener3 = ipcRenderer.on('main:notebase-removed', _notebaseRemoved);
+    const removeListener1 = ipcRenderer.on('main:hypergraph-opened', _openHypergraph);
+    const removeListener2 = ipcRenderer.on('main:hypergraph-tree-updated', _collectionTreeUpdated);
+    const removeListener3 = ipcRenderer.on('main:hypergraph-removed', _hypergraphRemoved);
 
     return () => {
       removeListener1();
@@ -47,4 +47,4 @@ const useNotebaseTreeSync = () => {
   }, []);
 };
 
-export default useNotebaseTreeSync;
+export default useHypergraphTreeSync;

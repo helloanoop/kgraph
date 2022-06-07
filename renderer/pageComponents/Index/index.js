@@ -1,9 +1,9 @@
 import React from 'react';
-import useNotebaseTreeSync from './useNotebaseTreeSync';
+import useHypergraphTreeSync from './useHypergraphTreeSync';
 import StyledWrapper from './StyledWrapper';
 
 export default function Main() {
-  useNotebaseTreeSync();
+  useHypergraphTreeSync();
 
   return (
     <div>

@@ -2,12 +2,12 @@ const { ipcMain } = require('electron');
 
 const template = [
   {
-    label: 'Notebase',
+    label: 'Hypergraph',
     submenu: [
       {
-        label: 'Open Notebase',
+        label: 'Open Hypergraph',
         click () {
-          ipcMain.emit('main:open-notebase');
+          ipcMain.emit('main:open-hypergraph');
         }
       },
       { role: 'quit' }

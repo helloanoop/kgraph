@@ -4,9 +4,9 @@ const { BrowserWindow, app, ipcMain, Menu } = require('electron');
 const { setContentSecurityPolicy } = require('electron-util');
 const { isDirectory } = require('./utils/filesystem');
 const { uuid } = require('./utils/common');
-const { openNotebase } = require('./app/notebase');
+const { openHypergraph } = require('./app/hypergraph');
 
-const LastOpenedNotebases = require('./app/last-opened-notebases');
+const LastOpenedHypergraphs = require('./app/last-opened-hypergraphs');
 const Watcher = require('./app/watcher');
 
 const menuTemplate = require('./app/menu-template');
@@ -14,7 +14,7 @@ const registerIpc = require('./ipc');
 const isDev = require('electron-is-dev');
 const prepareNext = require('electron-next');
 
-const lastOpenedNotebases = new LastOpenedNotebases();
+const lastOpenedHypergraphs = new LastOpenedHypergraphs();
 
 setContentSecurityPolicy(`
 	default-src * 'unsafe-inline' 'unsafe-eval';
@@ -66,38 +66,38 @@ app.on('window-all-closed', app.quit);
 
 ipcMain.handle('renderer:ready', async (event) => {
   // reload last opened collections
-  const lastOpened = lastOpenedNotebases.getAll();
+  const lastOpened = lastOpenedHypergraphs.getAll();
   if(lastOpened && lastOpened.length) {
-    for(let notebasePath of lastOpened) {
-      if(isDirectory(notebasePath)) {
+    for(let hypergraphPath of lastOpened) {
+      if(isDirectory(hypergraphPath)) {
         const uid = uuid();
-        mainWindow.webContents.send('main:notebase-opened', notebasePath, uid);
-        ipcMain.emit('main:notebase-opened', mainWindow, notebasePath, uid);
+        mainWindow.webContents.send('main:hypergraph-opened', hypergraphPath, uid);
+        ipcMain.emit('main:hypergraph-opened', mainWindow, hypergraphPath, uid);
       }
     }
   }
 });
 
-ipcMain.on('main:notebase-opened', (win, pathname, uid) => {
+ipcMain.on('main:hypergraph-opened', (win, pathname, uid) => {
   watcher.addWatcher(win, pathname, uid);
   lastOpenedCollections.add(pathname);
 });
 
-ipcMain.on('main:open-notebase', () => {
+ipcMain.on('main:open-hypergraph', () => {
   if(watcher && mainWindow) {
-    openNotebase(mainWindow, watcher);
+    openHypergraph(mainWindow, watcher);
   }
 });
 
-ipcMain.handle('renderer:open-notebase', () => {
+ipcMain.handle('renderer:open-hypergraph', () => {
   if(watcher && mainWindow) {
-    openNotebase(mainWindow, watcher);
+    openHypergraph(mainWindow, watcher);
   }
 });
 
-ipcMain.handle('renderer:remove-notebase', async (event, notebasePath) => {
+ipcMain.handle('renderer:remove-hypergraph', async (event, hypergraphPath) => {
   if(watcher && mainWindow) {
-    watcher.removeWatcher(notebasePath, mainWindow);
-    lastOpenedCollections.remove(notebasePath);
+    watcher.removeWatcher(hypergraphPath, mainWindow);
+    lastOpenedCollections.remove(hypergraphPath);
   }
 });

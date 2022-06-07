@@ -18,7 +18,7 @@ const add = async (win, pathname, uid) => {
     try {
       const yamlData = fs.readFileSync(pathname, 'utf8');
       file.data = yaml.load(yamlData);
-      win.webContents.send('main:notebase-tree-updated', 'addFile', file);
+      win.webContents.send('main:hypergraph-tree-updated', 'addFile', file);
     } catch (err) {
       console.error(err)
     }
@@ -32,7 +32,7 @@ const addDirectory = (win, pathname, uid) => {
     pathname,
     name: path.basename(pathname)
   };
-  win.webContents.send('main:notebase-tree-updated', 'addDir', directory);
+  win.webContents.send('main:hypergraph-tree-updated', 'addDir', directory);
 };
 
 const change = (win, pathname, uid) => {
@@ -46,7 +46,7 @@ const change = (win, pathname, uid) => {
   try {
     const yamlData = fs.readFileSync(pathname, 'utf8');
     file.data = yaml.load(yamlData);
-    win.webContents.send('main:notebase-tree-updated', 'change', file);
+    win.webContents.send('main:hypergraph-tree-updated', 'change', file);
   } catch (err) {
     console.error(err)
   }
@@ -59,7 +59,7 @@ const unlink = (win, pathname, uid) => {
     pathname,
     name: path.basename(pathname)
   };
-  win.webContents.send('main:notebase-tree-updated', 'unlink', file);
+  win.webContents.send('main:hypergraph-tree-updated', 'unlink', file);
 }
 
 const unlinkDir = (win, pathname, uid) => {
@@ -69,7 +69,7 @@ const unlinkDir = (win, pathname, uid) => {
     pathname,
     name: path.basename(pathname)
   };
-  win.webContents.send('main:notebase-tree-updated', 'unlinkDir', directory);
+  win.webContents.send('main:hypergraph-tree-updated', 'unlinkDir', directory);
 }
 
 class Watcher {
@@ -87,7 +87,7 @@ class Watcher {
       const watcher = chokidar.watch(watchPath, {
         ignoreInitial: false,
         usePolling: false,
-        ignored: path => ["node_modules", ".git", "notebase.yml"].some(s => path.includes(s)),
+        ignored: path => ["node_modules", ".git", "hypergraph.yml"].some(s => path.includes(s)),
         persistent: true,
         ignorePermissionErrors: true,
         awaitWriteFinish: {
@@ -116,7 +116,7 @@ class Watcher {
     if(this.watchers[watchPath]) {
       this.watchers[watchPath].close();
       this.watchers[watchPath] = null;
-      win.webContents.send('main:notebase-removed', watchPath);
+      win.webContents.send('main:hypergraph-removed', watchPath);
     }
   }
 };

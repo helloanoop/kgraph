@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <div>
       <Head>
-        <title>notebase</title>
+        <title>hypergraph</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 

@@ -1,7 +1,7 @@
 import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyle = createGlobalStyle`
-  .notebase-form {
+  .hypergraph-form {
     .textbox {
       line-height: 1.42857143;
       background-color: #fff;

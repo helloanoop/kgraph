@@ -27,16 +27,16 @@ const registerIpc = (mainWindow) => {
     }
   });
 
-  // create notebase
-  ipcMain.handle('renderer:create-notebase', async (event, notebaseName, notebaseLocation) => {
+  // create hypergraph
+  ipcMain.handle('renderer:create-hypergraph', async (event, hypergraphName, hypergraphLocation) => {
     try {
-      const dirPath = path.join(notebaseLocation, notebaseName);
+      const dirPath = path.join(hypergraphLocation, hypergraphName);
       if (fs.existsSync(dirPath)){
-        throw new Error(`notebase: ${dir} already exists`);
+        throw new Error(`hypergraph: ${dir} already exists`);
       }
 
       if(!isValidPathname(dirPath)) {
-        throw new Error(`notebase: invaid pathname - ${dir}`);
+        throw new Error(`hypergraph: invaid pathname - ${dir}`);
       }
 
       await createDirectory(dirPath);
@@ -44,11 +44,11 @@ const registerIpc = (mainWindow) => {
       const content = yaml.dump({
         version: '1.0'
       });
-      await writeFile(path.join(dirPath, 'notebase.yml'), content);
+      await writeFile(path.join(dirPath, 'hypergraph.yml'), content);
 
       const uid = uuid();
-      mainWindow.webContents.send('main:notebase-opened', dirPath, uid);
-      ipcMain.emit('main:notebase-opened', mainWindow, dirPath, uid);
+      mainWindow.webContents.send('main:hypergraph-opened', dirPath, uid);
+      ipcMain.emit('main:hypergraph-opened', mainWindow, dirPath, uid);
 
       return;
     } catch (error) {

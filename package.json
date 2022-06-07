@@ -1,5 +1,5 @@
 {
-  "name": "notebase-app",
+  "name": "hypergraph",
   "private": true,
   "main": "main/index.js",
   "scripts": {
