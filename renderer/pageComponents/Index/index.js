@@ -1,4 +1,5 @@
 import React from 'react';
+import Sidebar from 'components/Sidebar';
 import useHypergraphTreeSync from './useHypergraphTreeSync';
 import StyledWrapper from './StyledWrapper';
 
@@ -9,6 +10,7 @@ export default function Main() {
     <div>
       <StyledWrapper>
         Hello Electron!
+        <Sidebar />
       </StyledWrapper>
     </div>
   );

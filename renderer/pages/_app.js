@@ -1,3 +1,4 @@
+import HotkeysProvider from 'providers/Hotkeys';
 import Store from 'providers/Store';
 import { Provider } from 'react-redux';
 
@@ -34,7 +35,9 @@ function MyApp({ Component, pageProps }) {
     <SafeHydrate>
       <NoSsr>
         <Provider store={Store}>
-          <Component {...pageProps} />
+          <HotkeysProvider>
+            <Component {...pageProps} />
+          </HotkeysProvider>
         </Provider>
       </NoSsr>
     </SafeHydrate>
