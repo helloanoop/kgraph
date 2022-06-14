@@ -10,7 +10,10 @@ const template = [
           ipcMain.emit('main:open-hypergraph');
         }
       },
-      { role: 'quit' }
+      {
+        label: 'Quit',
+        role: 'quit'
+      }
     ]
   },
   {

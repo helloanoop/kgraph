@@ -1,5 +1,8 @@
 import HotkeysProvider from 'providers/Hotkeys';
+import AppProvider from 'providers/App';
+import ThemeProvider from 'providers/Theme';
 import Store from 'providers/Store';
+import { enableMapSet } from 'immer';
 import { Provider } from 'react-redux';
 
 import '../styles/globals.css'
@@ -31,13 +34,19 @@ function NoSsr({ children }) {
 }
 
 function MyApp({ Component, pageProps }) {
+  enableMapSet();
+
   return (
     <SafeHydrate>
       <NoSsr>
         <Provider store={Store}>
-          <HotkeysProvider>
-            <Component {...pageProps} />
-          </HotkeysProvider>
+          <ThemeProvider>
+            <HotkeysProvider>
+              <AppProvider>
+                <Component {...pageProps} />
+              </AppProvider>
+            </HotkeysProvider>
+          </ThemeProvider>
         </Provider>
       </NoSsr>
     </SafeHydrate>

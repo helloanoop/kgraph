@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import { useHotkeys } from 'providers/Hotkeys';
 import { IconMenu2 } from '@tabler/icons';
-import ConfirmModal from 'components/ConfirmModal';
 import StyledWrapper from './StyledWrapper';
 
 const Sidebar = () => {
@@ -22,7 +21,7 @@ const Sidebar = () => {
     <StyledWrapper className="pl-4 pr-4">
       <div className="flex mb-4">
         <div className="flex items-center py-3">
-          🍁 <span className="font-medium relative notebase-name">journal</span>
+          🦄 <span className="font-medium relative notebase-name">journal</span>
         </div>
         <div className="flex flex-grow justify-end items-center py-3">
           <div>
@@ -36,13 +35,13 @@ const Sidebar = () => {
           📜 <span>Index</span>
         </a>
         <a onClick={() => searchNotebase()}>
-          ➕ <span>Add Note</span>
+          ➕ <span>New Page</span>
         </a>
         <a onClick={() => goToDailyNote()}>
           📅 <span>Daily Notes</span>
         </a>
         <a onClick={() => goToAllNotes()} >
-          📕 <span>All Notes</span>
+          📕 <span>All Pages</span>
         </a>
         <a onClick={() => goToSearch()} >
           🔎 <span>Search</span>

@@ -1,25 +1,70 @@
 import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyle = createGlobalStyle`
-  .hypergraph-form {
-    .textbox {
-      line-height: 1.42857143;
-      background-color: #fff;
-      background-image: none;
-      border: 1px solid #ccc;
-      padding: 0.45rem;
-      box-shadow: none;
-      border-radius: 0px;
-      outline: none;
-      box-shadow: none;
-      transition: border-color ease-in-out .1s;
-      border-radius: 3px;
+  html, body {
+    margin: 0;
+    padding: 0;
+    font-size: 1rem;
+    color: var(--color-text-primary);
 
-      &:focus {
-        border: solid 1px #8b8b8b !important;
-        outline: none !important;
-      }
+    font-kerning: none;
+    text-rendering: optimizeSpeed;
+    letter-spacing: normal;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+
+    min-width: 320px;
+    min-height: 100vh;
+
+    &.overflow-y-hidden {
+      overflow-y: hidden;
     }
+  }
+
+  .font-inter {
+    font-family: Inter;
+  }
+
+  div.nb-sidebar-container {
+    position: absolute;
+    height: 100vh;
+    z-index: 100;
+    border-right: solid 1px #e2e2e2;
+    background-color: rgb(243, 243, 243);
+    min-width: 200px;
+
+    @media (min-width: 768px) {
+      position: relative;
+      border-right: none;
+    }
+  }
+
+  main.notebase-app {
+    width: 100%;
+
+    /* this is for page options dropdown overflow issue */
+    &.page-editor, &.page-daily {
+      max-width: inherit;
+    }
+
+    /* height: 100vh; */
+    margin: 0 auto;
+
+    overflow-y: scroll;
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+    &::-webkit-scrollbar { /* WebKit */
+      width: 0;
+      height: 0;
+    }
+  }
+
+  div.container.root {
+    width: 100%;
+    min-height: 100vh;
+    min-width: 320px;
+    max-width: 100%;
+    padding-left: 0;
+    padding-right: 0;
   }
 
   @keyframes fade-in {

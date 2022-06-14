@@ -80,7 +80,7 @@ ipcMain.handle('renderer:ready', async (event) => {
 
 ipcMain.on('main:hypergraph-opened', (win, pathname, uid) => {
   watcher.addWatcher(win, pathname, uid);
-  lastOpenedCollections.add(pathname);
+  lastOpenedHypergraphs.add(pathname);
 });
 
 ipcMain.on('main:open-hypergraph', () => {
@@ -98,6 +98,6 @@ ipcMain.handle('renderer:open-hypergraph', () => {
 ipcMain.handle('renderer:remove-hypergraph', async (event, hypergraphPath) => {
   if(watcher && mainWindow) {
     watcher.removeWatcher(hypergraphPath, mainWindow);
-    lastOpenedCollections.remove(hypergraphPath);
+    lastOpenedHypergraphs.remove(hypergraphPath);
   }
 });

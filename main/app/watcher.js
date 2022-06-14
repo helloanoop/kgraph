@@ -94,7 +94,7 @@ class Watcher {
           stabilityThreshold: 80,
           pollInterval: 10
         },
-        depth: 20
+        depth: 2
       });
   
       watcher

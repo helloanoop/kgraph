@@ -28,3 +28,21 @@ body::-webkit-scrollbar-thumb {
   background-color: #cdcdcd;
   border-radius: 5rem;
 }
+
+:root {
+  --color-text-link: #1663bb;
+  --color-text-blue: #0046b1;
+  --color-text-primary: rgb(47, 48, 55);
+  --color-text-navbar: rgb(117 117 117); 
+  --color-modal-header: rgb(74, 74, 74);
+  --color-bg-primary: #ffffff;
+  --color-state-hover-secondary-bg: #f6f8fa;
+  --color-menu-heading-text: #24292e;
+  --color-menu-border-active: #3D8B00;
+  --color-border-primary: #e1e4e8;
+  --color-border-secondary: #eaecef;
+}
+
+.nb-link {
+  color: var(--color-text-link);
+}
