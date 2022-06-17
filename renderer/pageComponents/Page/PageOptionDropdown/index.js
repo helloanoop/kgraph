@@ -5,7 +5,7 @@ import { IconTrash, IconList, IconMoodSmile } from '@tabler/icons';
 import useOnClickOutside from 'hooks/useOnClickOutside';
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
-import { pageIconSelected } from 'providers/Store/slices/kgraph';
+import { pageIconSelected, togglePageOutliner } from 'providers/Store/slices/kgraph';
 import PageIcon from '../PageIcon';
 import StyledWrapper from './StyledWrapper';
 
@@ -20,10 +20,9 @@ const PageOptionDropdown = ({isOpen, onClose, position, page}) => {
   const left = position === 'right' ? 'inherit' : '-125px';
 
   const handleOutline = () => {
-    // dispatch({
-    //   type: actions.PAGE_OUTLINE,
-    //   noteUid: page.uid
-    // });
+    dispatch(togglePageOutliner({
+      pageUid: page.uid
+    }));
   };
 
   const handlePageIconClick = () => {

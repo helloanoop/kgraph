@@ -175,6 +175,12 @@ export const kgraphSlice = createSlice({
       currentBlock.collapsed = !currentBlock.collapsed;
       savePage(page);
     },
+    togglePageOutliner: (state, action) => {
+      const kgraph = state.kgraph;
+      const page = kgraph.pageMap.get(action.payload.pageUid);
+      page.is_outliner = !page.is_outliner;
+      savePage(page);
+    },
     onBlockBlur: (state, action) => {
       const kgraph = state.kgraph;
       const page = kgraph.pageMap.get(action.payload.pageUid);
@@ -288,6 +294,7 @@ export const {
   pageTitleChanged,
   focusBlock,
   collapseBlock,
+  togglePageOutliner,
   onBlockBlur,
   blockEnterKeyPressed,
   blockTabKeyPressed,
