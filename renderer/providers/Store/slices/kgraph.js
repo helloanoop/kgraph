@@ -1,7 +1,10 @@
 import path from 'path';
+import each from 'lodash/each';
+import datascript from 'datascript';
 import { createSlice } from '@reduxjs/toolkit';
 import { slugify } from 'utils/text';
 import { dsid } from 'utils/datascript';
+import { uuid } from 'utils/common';
 import {
   flattenBlocks,
   getUidBlockMap,
@@ -11,12 +14,15 @@ import {
   getNextBlockDown,
   addBlockToPage,
   removeBlockFromPage,
+  extractPageRefs,
   transformPageToSaveToFilesystem
 } from 'utils/kgraph';
+import { createConnection } from 'utils/datascript';
 import Page from '../models/Page';
 import Block from '../models/Block';
 
 const initialState = {
+  dsConnection: null,
   kgraph: {}
 };
 
@@ -26,6 +32,88 @@ const savePage = (page) => {
   ipcRenderer
     .invoke('renderer:save-page', page.pathname, p)
     .catch((error) => console.log(error));
+};
+
+const createPage = (page) => {
+  const { ipcRenderer } = window;
+  const p = transformPageToSaveToFilesystem(page);
+  ipcRenderer
+    .invoke('renderer:create-page', page.pathname, p)
+    .catch((error) => console.log(error));
+};
+
+const addNewPage = (title, state, options = {}) => {
+  let newPage = new Page();
+  newPage.setPage({
+    uid: uuid(),
+    title: title,
+    blocks: [{
+      uid: uuid(),
+      content: ''
+    }],
+    icon: null,
+    cover: null,
+    is_daily: options.is_daily ? true : false
+  });
+  newPage.dsid = dsid();
+
+  state.kgraph.pageMap.set(newPage.uid, newPage);
+  state.kgraph.pageSlugMap.set(newPage.slug, newPage.uid);
+  // createPage(newPage);
+  console.log('create newPage');
+  console.log(title);
+  console.log(newPage);
+
+  datascript.transact(state.dsConnection, [{
+    ':db/id': newPage.dsid,
+    ':page/title': newPage.title,
+    ':page/uid': newPage.uid,
+    ':page/slug': newPage.slug
+  }]);
+  
+  return newPage;
+};
+
+const loadPageIntoDatascript = (state, page) => {
+  // load data into datascript
+  let datoms = [];
+  datoms.push({
+    ':db/id': page.dsid,
+    ':page/title': page.title,
+    ':page/uid': page.uid,
+    ':page/slug': page.slug
+  });
+  datascript.transact(state.dsConnection, datoms);
+
+  let flattenedBlocks = flattenBlocks(page.blocks);
+  let pagerefDatoms = [];
+
+  each(flattenedBlocks, (block) => {
+    let pagerefs = extractPageRefs(block);
+    each(pagerefs, (pr) => {
+      if(pr && pr.length && typeof pr === 'string') {
+        let slug = slugify(pr);
+        let reffedNoteUid = state.kgraph.pageSlugMap.get(slug);
+        if(reffedNoteUid) {
+          let reffedNote = state.kgraph.pageMap.get(reffedNoteUid);
+          pagerefDatoms.push({
+            ':db/id': page.dsid,
+            ':page/refs': reffedNote.dsid
+          });
+        } else {
+          let newPage = addNewPage(pr, state);
+          pagerefDatoms.push({
+            ':db/id': page.dsid,
+            ':page/refs': newPage.dsid
+          });
+        }
+      }
+    });
+  });
+
+  if(pagerefDatoms.length) {
+    datascript.transact(state.dsConnection, pagerefDatoms);
+  }
 };
 
 export const kgraphSlice = createSlice({
@@ -41,6 +129,7 @@ export const kgraphSlice = createSlice({
         pageSlugMap: new Map(),
         focusedBlock: {}
       };
+      state.dsConnection = createConnection();
     },
     addFileEvent: (state, action) => {
       const file = action.payload.file;
@@ -60,6 +149,7 @@ export const kgraphSlice = createSlice({
         page.dsid = dsid();
         state.kgraph.pageMap.set(page.uid, page);
         state.kgraph.pageSlugMap.set(page.slug, page.uid);
+        loadPageIntoDatascript(state, page);
       }
     },
     changeFileEvent: (state, action) => {

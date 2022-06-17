@@ -1,6 +1,6 @@
 import datascript from 'datascript';
 
-if (process.browser && process.env.NEXT_PUBLIC_ENV === 'dev') {
+if(process.browser && process.env.NEXT_PUBLIC_ENV === 'dev') {
   window.ds = datascript;
 }
 
@@ -25,6 +25,9 @@ export const createConnection = () => {
   };
 
   const connection = datascript.create_conn(kgraphSchema);
+  if(process.browser && process.env.NEXT_PUBLIC_ENV === 'dev') {
+    window.dc = connection;
+  }
 
   return connection;
 };

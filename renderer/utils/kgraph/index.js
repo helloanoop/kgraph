@@ -2,10 +2,10 @@ import each from 'lodash/each';
 import find from 'lodash/find';
 import last from 'lodash/last';
 import filter from 'lodash/filter';
+import map from 'lodash/map';
 import reduce from 'lodash/reduce';
 import values from 'lodash/values';
 import isString from 'lodash/isString';
-
 
 export const findPageInKgraphByPathname = (pages, pathname) => {
   return find(pages, (p) => p.pathname === pathname);
@@ -264,6 +264,14 @@ export const removeBlockFromPage = (block, uidBlockMap, page) => {
     const blockIndex = rootBlocks.indexOf(block);
     page.blocks.splice(blockIndex, 1);
   }
+};
+
+export const extractPageRefs = (block) => {
+  const regex = /\[\[([^[\]]*)\]\]/g;
+  let content = block.content || '';
+  let results = content.match(regex);
+
+  return map(results, (r) => r.substring(2, r.length - 2));
 };
 
 export const transformPageToSaveToFilesystem = (page) => {
