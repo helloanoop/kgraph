@@ -9,6 +9,7 @@
       "pageComponents/*": ["src/pageComponents/*"],
       "providers/*": ["src/providers/*"],
       "utils/*": ["src/utils/*"],
+      "hooks/*": ["src/hooks/*"],
       "themes/*": ["src/themes/*"]
     }
   },

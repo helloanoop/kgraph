@@ -2,11 +2,11 @@ import Head from 'next/head';
 import IndexPage from 'pageComponents/Index';
 import GlobalStyle from '../globalStyles';
 
-export default function Home() {
+const Home = () => {
   return (
     <div>
       <Head>
-        <title>hypergraph</title>
+        <title>kgraph</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -18,3 +18,5 @@ export default function Home() {
     </div>
   );
 };
+
+export default Home;

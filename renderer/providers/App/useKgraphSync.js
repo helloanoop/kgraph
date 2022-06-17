@@ -2,7 +2,8 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import {
   openKgraphEvent,
-  addFileEvent
+  addFileEvent,
+  changeFileEvent
 } from 'providers/Store/slices/kgraph';
 
 const useKgraphSync = () => {
@@ -30,6 +31,11 @@ const useKgraphSync = () => {
         }));
       }
       if(type === 'change') {
+        console.log(`hypergraph: changeFile`);
+        console.log(val);
+        dispatch(changeFileEvent({
+          file: val
+        }));
         // todo
       }
       if(type === 'unlink') {

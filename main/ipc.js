@@ -70,14 +70,14 @@ const registerIpc = (mainWindow) => {
     }
   });
 
-  // save file
-  ipcMain.handle('renderer:save-file', async (event, pathname, fileContents) => {
+  // save page
+  ipcMain.handle('renderer:save-page', async (event, pathname, page) => {
     try {
       if (!fs.existsSync(pathname)){
         throw new Error(`path: ${pathname} does not exist`);
       }
 
-      await writeFile(pathname, yaml.dump(fileContents, yamlDumpOptions));
+      await writeFile(pathname, yaml.dump(page, yamlDumpOptions));
     } catch (error) {
       return Promise.reject(error);
     }

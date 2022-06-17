@@ -8,7 +8,7 @@ const Block = function(values = {}) {
   this.uid = values.uid || nanoid();
   this.content = values.content || '';
   this.index = values.index || null;
-  this.fold = values.fold || false;
+  this.collapsed = values.collapsed || false;
 };
 
 Block.prototype.hasParent = function(parent) {

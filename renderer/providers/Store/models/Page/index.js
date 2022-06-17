@@ -1,7 +1,7 @@
 import Block from '../Block';
 import each from 'lodash/each';
 import {immerable} from "immer";
-import {slugify} from 'utils/text';
+import { isPageTitleADate, slugify } from 'utils/text';
 
 const Page = function(values = {}) {
   this[immerable] = true;
@@ -19,7 +19,7 @@ Page.prototype.setPage = function(page) {
   this.title = page.title || '';
   this.blocks = this.setBlocksFromArray(page.blocks);
   this.icon = page.icon || null;
-  this.is_daily = page.is_daily || false;
+  this.is_daily = isPageTitleADate(page.title);
   this.is_outliner = page.is_outliner || false;
   this.slug = slugify(page.title);
   this.word_count = page.word_count || 0;
@@ -38,7 +38,7 @@ Page.prototype.setBlocksFromArray = function(arrBlocks = []) {
       let block = new Block({
         uid: b.uid,
         content: b.content,
-        fold: b.fold
+        collapsed: b.collapsed
       });
 
       createdBlocks.push(block);

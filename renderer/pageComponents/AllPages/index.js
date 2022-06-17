@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-// import { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import unionBy from 'lodash/unionBy';
 import { format } from 'date-fns';
 import { useSelector } from 'react-redux';
@@ -7,7 +7,7 @@ import { getWordCountInPage } from 'utils/kgraph';
 import StyledWrapper from './StyledWrapper';
 
 const AllPages = () => {
-//   const router = useRouter();
+  const router = useRouter();
   const kgraph = useSelector((state) => state.kgraph.kgraph);
 
   const {
@@ -45,8 +45,7 @@ const AllPages = () => {
   }, [hasMore]);
 
   const handlePageClick = (e, page) => {
-    console.log('page clicked');
-    // router.push(`/n/${notebaseName}/${page.uid}`);
+    router.push(`/${page.uid}`);
   };
 
   return (

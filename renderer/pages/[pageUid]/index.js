@@ -1,9 +1,9 @@
 import Head from 'next/head';
 import Sidebar from 'components/Sidebar';
-import AllPages from 'pageComponents/AllPages';
-import GlobalStyle from '../globalStyles';
+import Page from 'pageComponents/Page';
+import GlobalStyle from '../../globalStyles';
 
-const AllPagesView = () => {
+const PageView = () => {
   const leftSidebarOpen =true;
 
   return (
@@ -18,14 +18,12 @@ const AllPagesView = () => {
         <Sidebar/>
       </div>
       <div className="w-full">
-        {/* <Navbar/> */}
-
-        <main className="flex flex-grow flex-col notebase-app px-4">
-          <AllPages />
+        <main className="flex flex-grow flex-col notebase-app px-4" style={{marginTop: '2rem'}}>
+          <Page />
         </main>
       </div>
     </div>
   );
 };
 
-export default AllPagesView;
+export default PageView;
