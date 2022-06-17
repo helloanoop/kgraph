@@ -4,11 +4,14 @@ import Switch from "react-switch";
 import { IconTrash, IconList, IconMoodSmile } from '@tabler/icons';
 import useOnClickOutside from 'hooks/useOnClickOutside';
 import { useRouter } from 'next/router';
+import { useDispatch } from 'react-redux';
+import { pageIconSelected } from 'providers/Store/slices/kgraph';
 import PageIcon from '../PageIcon';
 import StyledWrapper from './StyledWrapper';
 
 const PageOptionDropdown = ({isOpen, onClose, position, page}) => {
   const router = useRouter();
+  const dispatch = useDispatch();
   const popOverRef = useRef(null);
   const [pageIconOpen, setPageIconOpen] = useState(false);
 
@@ -31,11 +34,10 @@ const PageOptionDropdown = ({isOpen, onClose, position, page}) => {
   const handlePageIconClose = () => setPageIconOpen(false);
 
   const handlePageIconSelect = (icon) => {
-    // dispatch({
-    //   type: actions.PAGE_ICON_SELECT,
-    //   icon: icon,
-    //   noteUid: page.uid
-    // });
+    dispatch(pageIconSelected({
+      icon: icon,
+      pageUid: page.uid
+    }));
     setPageIconOpen(false);
   };
 

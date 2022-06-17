@@ -269,6 +269,14 @@ export const kgraphSlice = createSlice({
         removeBlockFromPage(currentBlock, uidBlockMap, page);
         savePage(page);
       }
+    },
+    pageIconSelected: (state, action) => {
+      const kgraph = state.kgraph;
+      const page = kgraph.pageMap.get(action.payload.pageUid);
+      if(page && action.payload.icon && action.payload.icon.type === 'emoji') {
+        page.icon = `u${action.payload.icon.unicode}`;
+        savePage(page);
+      }
     }
   }
 });
@@ -285,7 +293,8 @@ export const {
   blockTabKeyPressed,
   blockUpKeyPressed,
   blockDownKeyPressed,
-  blockBackspaceKeyPressed
+  blockBackspaceKeyPressed,
+  pageIconSelected
 } = kgraphSlice.actions;
 
 export default kgraphSlice.reducer;
