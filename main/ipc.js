@@ -57,13 +57,13 @@ const registerIpc = (mainWindow) => {
   });
 
   // new file
-  ipcMain.handle('renderer:new-file', async (event, pathname, request) => {
+  ipcMain.handle('renderer:create-page', async (event, pathname, page) => {
     try {
       if (fs.existsSync(pathname)){
         throw new Error(`path: ${pathname} already exists`);
       }
 
-      const content = yaml.dump(request, yamlDumpOptions);
+      const content = yaml.dump(page, yamlDumpOptions);
       await writeFile(pathname, content);
     } catch (error) {
       return Promise.reject(error);

@@ -34,11 +34,11 @@ const savePage = (page) => {
     .catch((error) => console.log(error));
 };
 
-const createPage = (page) => {
+const createPage = (page, pathname) => {
   const { ipcRenderer } = window;
   const p = transformPageToSaveToFilesystem(page);
   ipcRenderer
-    .invoke('renderer:create-page', page.pathname, p)
+    .invoke('renderer:create-page', pathname, p)
     .catch((error) => console.log(error));
 };
 
@@ -59,10 +59,7 @@ const addNewPage = (title, state, options = {}) => {
 
   state.kgraph.pageMap.set(newPage.uid, newPage);
   state.kgraph.pageSlugMap.set(newPage.slug, newPage.uid);
-  // createPage(newPage);
-  console.log('create newPage');
-  console.log(title);
-  console.log(newPage);
+  createPage(newPage, path.join(state.kgraph.pathname, `${newPage.slug}.yml`));
 
   datascript.transact(state.dsConnection, [{
     ':db/id': newPage.dsid,
