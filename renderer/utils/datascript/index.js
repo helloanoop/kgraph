@@ -1,8 +1,21 @@
 import datascript from 'datascript';
+import each from 'lodash/each';
+import path from 'path';
+import { slugify } from 'utils/text';
+import { createPage } from 'utils/ipc';
+import { uuid } from 'utils/common';
+import { extractPageRefs, flattenBlocks } from 'utils/kgraph';
+import Page from 'providers/Store/models/Page';
 
 if(process.browser && process.env.NEXT_PUBLIC_ENV === 'dev') {
   window.ds = datascript;
 }
+
+// datascript :db/id generator
+let __dsid = 0;
+export const dsid = () => {
+  return ++__dsid;
+};
 
 export const createConnection = () => {
   const kgraphSchema = {
@@ -32,8 +45,73 @@ export const createConnection = () => {
   return connection;
 };
 
-// datascript :db/id generator
-let __dsid = 0;
-export const dsid = () => {
-  return ++__dsid;
+export const loadPageIntoDatascript = (dsConnection, kgraph, page) => {
+  // load data into datascript
+  let datoms = [];
+  datoms.push({
+    ':db/id': page.dsid,
+    ':page/title': page.title,
+    ':page/uid': page.uid,
+    ':page/slug': page.slug
+  });
+  datascript.transact(dsConnection, datoms);
+
+  let flattenedBlocks = flattenBlocks(page.blocks);
+  let pagerefDatoms = [];
+
+  each(flattenedBlocks, (block) => {
+    let pagerefs = extractPageRefs(block);
+    each(pagerefs, (pr) => {
+      if(pr && pr.length && typeof pr === 'string') {
+        let slug = slugify(pr);
+        let reffedNoteUid = kgraph.pageSlugMap.get(slug);
+        if(reffedNoteUid) {
+          let reffedNote = kgraph.pageMap.get(reffedNoteUid);
+          pagerefDatoms.push({
+            ':db/id': page.dsid,
+            ':page/refs': reffedNote.dsid
+          });
+        } else {
+          let newPage = addNewPage(dsConnection, kgraph, pr);
+          pagerefDatoms.push({
+            ':db/id': page.dsid,
+            ':page/refs': newPage.dsid
+          });
+        }
+      }
+    });
+  });
+
+  if(pagerefDatoms.length) {
+    datascript.transact(dsConnection, pagerefDatoms);
+  }
+};
+
+export const addNewPage = (dsConnection, kgraph, title, options = {}) => {
+  let newPage = new Page();
+  newPage.setPage({
+    uid: uuid(),
+    title: title,
+    blocks: [{
+      uid: uuid(),
+      content: ''
+    }],
+    icon: null,
+    cover: null,
+    is_daily: options.is_daily ? true : false
+  });
+  newPage.dsid = dsid();
+
+  kgraph.pageMap.set(newPage.uid, newPage);
+  kgraph.pageSlugMap.set(newPage.slug, newPage.uid);
+  createPage(newPage, path.join(kgraph.pathname, `${newPage.slug}.yml`));
+
+  datascript.transact(dsConnection, [{
+    ':db/id': newPage.dsid,
+    ':page/title': newPage.title,
+    ':page/uid': newPage.uid,
+    ':page/slug': newPage.slug
+  }]);
+  
+  return newPage;
 };
