@@ -9,7 +9,7 @@ export const createPage = (page, pathname) => {
 };
 
 
-const savePage = (page) => {
+export const savePage = (page) => {
   const { ipcRenderer } = window;
   const p = transformPageToSaveToFilesystem(page);
   ipcRenderer

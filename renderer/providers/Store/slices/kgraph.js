@@ -1,7 +1,11 @@
 import path from 'path';
 import { createSlice } from '@reduxjs/toolkit';
 import { slugify } from 'utils/text';
-import { dsid, loadPageIntoDatascript } from 'utils/datascript';
+import {
+  dsid,
+  loadPageIntoDatascript,
+  checkPagerefsAndAddPageIfNotFound
+} from 'utils/datascript';
 import {
   flattenBlocks,
   getUidBlockMap,
@@ -189,7 +193,7 @@ export const kgraphSlice = createSlice({
       }
       kgraph.focusedBlock.uid = null;
       kgraph.focusedBlock.caretPos = 0;
-      // checkPagerefsAndAddPageIfNotFound(currentBlock, draft, action.noteUid);
+      checkPagerefsAndAddPageIfNotFound(state.dsConnection, currentBlock, page, state.kgraph);
     },
     blockEnterKeyPressed: (state, action) => {
       const kgraph = state.kgraph;

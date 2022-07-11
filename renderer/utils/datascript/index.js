@@ -55,31 +55,25 @@ export const loadPageIntoDatascript = (dsConnection, kgraph, page) => {
     ':page/slug': page.slug
   });
   datascript.transact(dsConnection, datoms);
+};
 
-  let flattenedBlocks = flattenBlocks(page.blocks);
+export const checkPagerefsAndAddPageIfNotFound = (dsConnection, block, page, kgraph) => {
+  let pagerefs = extractPageRefs(block);
   let pagerefDatoms = [];
-
-  each(flattenedBlocks, (block) => {
-    let pagerefs = extractPageRefs(block);
-    each(pagerefs, (pr) => {
-      if(pr && pr.length && typeof pr === 'string') {
-        let slug = slugify(pr);
-        let reffedNoteUid = kgraph.pageSlugMap.get(slug);
-        if(reffedNoteUid) {
-          let reffedNote = kgraph.pageMap.get(reffedNoteUid);
-          pagerefDatoms.push({
-            ':db/id': page.dsid,
-            ':page/refs': reffedNote.dsid
-          });
-        } else {
-          let newPage = addNewPage(dsConnection, kgraph, pr);
-          pagerefDatoms.push({
-            ':db/id': page.dsid,
-            ':page/refs': newPage.dsid
-          });
-        }
+  each(pagerefs, (pr) => {
+    if(pr && pr.length && typeof pr === 'string') {
+      let slug = slugify(pr);
+      let reffedNoteUid = kgraph.pageSlugMap.get(slug);
+      if(reffedNoteUid) {
+        let reffedNote = kgraph.pageMap.get(reffedNoteUid);
+        pagerefDatoms.push({
+          ':db/id': page.dsid,
+          ':page/refs': reffedNote.dsid
+        });
+      } else {
+        addNewPage(dsConnection, kgraph, pr);
       }
-    });
+    }
   });
 
   if(pagerefDatoms.length) {
@@ -106,12 +100,5 @@ export const addNewPage = (dsConnection, kgraph, title, options = {}) => {
   kgraph.pageSlugMap.set(newPage.slug, newPage.uid);
   createPage(newPage, path.join(kgraph.pathname, `${newPage.slug}.yml`));
 
-  datascript.transact(dsConnection, [{
-    ':db/id': newPage.dsid,
-    ':page/title': newPage.title,
-    ':page/uid': newPage.uid,
-    ':page/slug': newPage.slug
-  }]);
-  
   return newPage;
 };
