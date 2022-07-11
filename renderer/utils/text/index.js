@@ -12,7 +12,7 @@ import { isValid as isValidDate, parse } from 'date-fns';
  */
 const fnSlugify = (str) => {
   if(!str || !str.length || typeof str !== 'string') {
-    throw new Error('Slugify: Invalid string provided');
+    return '';
   }
 
   const slugifyOpts = {

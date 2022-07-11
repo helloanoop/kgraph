@@ -1,30 +1,29 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import StyledWrapper from './StyledWrapper';
-import { useStore } from 'providers/Store';
-import RenderedBlock from 'pageComponents/Page/Editor/Block/RenderedBlock';
 import each from 'lodash/each';
 import find from 'lodash/find';
 import { slugify } from 'utils/text';
+import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-import { flattenBlocks, extractPageRefs } from 'providers/Store/utils';
+import { flattenBlocks, extractPageRefs } from 'utils/kgraph';
+import RenderedBlock from 'pageComponents/Page/Editor/Block/RenderedBlock';
+import StyledWrapper from './StyledWrapper';
 
 const LinkedReference = ({title, pageUid, currentPageTitle}) => {
   const router = useRouter();
-  const [state] = useStore();
+  const kgraph = useSelector((state) => state.kgraph.kgraph);
   const {
-    pageMap,
-    notebaseName,
-  } = state;
+    pageMap
+  } = kgraph;
 
   const page = pageMap.get(pageUid);
   const flattenedBlocks = flattenBlocks(page.blocks);
   const linkedBlocks = [];
 
   each(flattenedBlocks, (block) => {
-    let pagrefs = extractPageRefs(block);
-    if(pagrefs && pagrefs.length) {
-      let linkFound = find(pagrefs, (r) => {
+    let pagerefs = extractPageRefs(block);
+    if(pagerefs && pagerefs.length) {
+      let linkFound = find(pagerefs, (r) => {
         return slugify(currentPageTitle) === slugify(r);
       });
       if(linkFound) {
@@ -41,7 +40,7 @@ const LinkedReference = ({title, pageUid, currentPageTitle}) => {
       event.nativeEvent.stopImmediatePropagation();
     }
 
-    router.push(`/n/${notebaseName}/${pageUid}`);
+    router.push(pageUid);
   };
 
   return (

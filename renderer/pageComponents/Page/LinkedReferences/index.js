@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import datascript from 'datascript';
+import { useSelector } from 'react-redux';
 import LinkedReference from './LinkedReference';
 import StyledWrapper from './StyledWrapper';
-import datascript from 'datascript';
-import { useStore } from 'providers/Store';
 
-const LinkedReferences = ({noteUid}) => {
+const LinkedReferences = ({pageUid}) => {
   const [results, setResults] = useState([]);
-  const [state] = useStore();
+  const kgraph = useSelector((state) => state.kgraph.kgraph);
+  const dsConnection = useSelector((state) => state.kgraph.dsConnection);
   const {
-    pageMap,
-    datascriptConnection
-  } = state;
+    pageMap
+  } = kgraph;
 
-  const page = pageMap.get(noteUid);
+  const page = pageMap.get(pageUid);
 
   useEffect(() => {
     if(page.title && page.title.length) {
@@ -24,7 +24,8 @@ const LinkedReferences = ({noteUid}) => {
                 [?pid ":page/uid" ?puid]
                 [?refPageId ":page/title" "${page.title}"]]
       `;
-      const results = datascript.q(dsQuery, datascript.db(datascriptConnection));
+      const results = datascript.q(dsQuery, datascript.db(dsConnection));
+      console.log(results);
       setResults(results);
     }
   }, [page.title]);
@@ -45,7 +46,7 @@ const LinkedReferences = ({noteUid}) => {
 };
 
 LinkedReferences.propTypes = {
-  noteUid: PropTypes.string.isRequired
+  pageUid: PropTypes.string.isRequired
 };
 
 export default LinkedReferences;

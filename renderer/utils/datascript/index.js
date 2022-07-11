@@ -55,6 +55,30 @@ export const loadPageIntoDatascript = (dsConnection, kgraph, page) => {
     ':page/slug': page.slug
   });
   datascript.transact(dsConnection, datoms);
+
+  let flattenedBlocks = flattenBlocks(page.blocks);
+  let pagerefDatoms = [];
+
+  each(flattenedBlocks, (block) => {
+    let pagerefs = extractPageRefs(block);
+    each(pagerefs, (pr) => {
+      if(pr && pr.length && typeof pr === 'string') {
+        let slug = slugify(pr);
+        let reffedNoteUid = kgraph.pageSlugMap.get(slug);
+        if(reffedNoteUid) {
+          let reffedNote = kgraph.pageMap.get(reffedNoteUid);
+          pagerefDatoms.push({
+            ':db/id': page.dsid,
+            ':page/refs': reffedNote.dsid
+          });
+        }
+      }
+    });
+  });
+
+  if(pagerefDatoms.length) {
+    datascript.transact(dsConnection, pagerefDatoms);
+  }
 };
 
 export const checkPagerefsAndAddPageIfNotFound = (dsConnection, block, page, kgraph) => {
@@ -71,7 +95,7 @@ export const checkPagerefsAndAddPageIfNotFound = (dsConnection, block, page, kgr
           ':page/refs': reffedNote.dsid
         });
       } else {
-        addNewPage(dsConnection, kgraph, pr);
+        addNewPage(kgraph, pr);
       }
     }
   });
@@ -81,7 +105,7 @@ export const checkPagerefsAndAddPageIfNotFound = (dsConnection, block, page, kgr
   }
 };
 
-export const addNewPage = (dsConnection, kgraph, title, options = {}) => {
+export const addNewPage = (kgraph, title, options = {}) => {
   let newPage = new Page();
   newPage.setPage({
     uid: uuid(),

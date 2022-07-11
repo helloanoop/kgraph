@@ -4,7 +4,7 @@ import classnames from 'classnames';
 import Title from './Title';
 import Block from './Block';
 import PageIcon from './PageIcon';
-// import LinkedReferences from '../LinkedReferences';
+import LinkedReferences from '../LinkedReferences';
 import StyledWrapper from './StyledWrapper';
 
 const Editor = ({page, blocks, focusedBlock, pageUid, caller}) => {
@@ -25,7 +25,7 @@ const Editor = ({page, blocks, focusedBlock, pageUid, caller}) => {
           caller={caller}
         />
       })}
-      {/* <LinkedReferences noteUid={noteUid}/> */}
+      <LinkedReferences pageUid={pageUid}/>
     </StyledWrapper>
   );
 }

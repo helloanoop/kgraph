@@ -2,8 +2,6 @@ import React from 'react'
 import StyledWrapper from './StyledWrapper';
 
 const PageIcon = ({page}) => {
-  console.log("here");
-  console.log(page);
   if(!page || !page.icon || !page.icon.length) {
     return null;
   }
