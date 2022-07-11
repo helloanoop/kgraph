@@ -38,7 +38,7 @@ const GlobalStyle = createGlobalStyle`
     }
   }
 
-  main.notebase-app {
+  main.kgraph-app {
     width: 100%;
 
     /* this is for page options dropdown overflow issue */

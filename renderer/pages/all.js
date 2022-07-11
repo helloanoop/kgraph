@@ -20,7 +20,7 @@ const AllPagesView = () => {
       <div className="w-full">
         {/* <Navbar/> */}
 
-        <main className="flex flex-grow flex-col notebase-app px-4">
+        <main className="flex flex-grow flex-col notebase-app px-4 pt-10">
           <AllPages />
         </main>
       </div>

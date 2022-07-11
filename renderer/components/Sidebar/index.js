@@ -6,7 +6,7 @@ import StyledWrapper from './StyledWrapper';
 
 const Sidebar = () => {
   const router = useRouter();
-  const { searchNotebase } = useHotkeys();
+  const { searchKgraph } = useHotkeys();
 
   const gotoIndex = () => router.push(`/index`);
   const goToAllNotes = () => router.push(`/all`);
@@ -34,7 +34,7 @@ const Sidebar = () => {
         <a onClick={() => gotoIndex()} >
           📜 <span>Index</span>
         </a>
-        <a onClick={() => searchNotebase()}>
+        <a onClick={() => searchKgraph()}>
           ➕ <span>New Page</span>
         </a>
         <a onClick={() => goToDailyNote()}>

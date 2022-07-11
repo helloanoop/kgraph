@@ -18,7 +18,7 @@ const PageView = () => {
         <Sidebar/>
       </div>
       <div className="w-full">
-        <main className="flex flex-grow flex-col notebase-app px-4" style={{marginTop: '2rem'}}>
+        <main className="flex flex-grow flex-col kgraph-app px-4 pt-10">
           <Page />
         </main>
       </div>

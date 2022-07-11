@@ -68,7 +68,6 @@ const EditingBlock = ({ block, focusedBlock, pageUid }) => {
       (event.shiftKey && event.key === 'Shift') ||
       (event.key === 'Alt')
     ) {
-      stopEventPropogation(event);
       return;
     }
 
