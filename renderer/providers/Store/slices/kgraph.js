@@ -16,14 +16,26 @@ import {
   addBlockToPage,
   removeBlockFromPage
 } from 'utils/kgraph';
+import { uuid } from 'utils/common';
+import { createPage, savePage } from 'utils/ipc';
 import { createConnection } from 'utils/datascript';
-import { savePage } from 'utils/ipc';
 import Page from '../models/Page';
 import Block from '../models/Block';
 
 const initialState = {
   dsConnection: null,
-  kgraph: {}
+  kgraph: {},
+
+  // this var is used to store the newly added page id
+  // when the page shows up in the addFileEvent, we can
+  // copy the value to routeToNewlyAddedPage
+  newlyAddedPageUid: null,
+
+  // The AppProvider listens to changes to this var
+  // and routes it to the new page
+  // I know, this is not an elegant solution :)
+  // Let me know if there is a better way of doing this
+  routeToNewlyAddedPageUid: null
 };
 
 export const kgraphSlice = createSlice({
@@ -60,6 +72,10 @@ export const kgraphSlice = createSlice({
         state.kgraph.pageMap.set(page.uid, page);
         state.kgraph.pageSlugMap.set(page.slug, page.uid);
         loadPageIntoDatascript(state.dsConnection, state.kgraph, page);
+
+        if(state.newlyAddedPageUid === page.uid) {
+          state.routeToNewlyAddedPageUid = state.newlyAddedPageUid;
+        }
       }
     },
     changeFileEvent: (state, action) => {
@@ -283,6 +299,23 @@ export const kgraphSlice = createSlice({
         page.icon = `u${action.payload.icon.unicode}`;
         savePage(page);
       }
+    },
+    createNewPage: (state, action) => {
+      const newPage = new Page();
+      const kgraph = state.kgraph;
+      newPage.setPage({
+        uid: uuid(),
+        title: action.payload.title,
+        blocks: [{
+          uid: uuid(),
+          content: ''
+        }],
+        icon: null,
+        cover: null,
+        is_outliner: true
+      });
+      state.newlyAddedPageUid = newPage.uid;
+      createPage(newPage, path.join(kgraph.pathname, `${newPage.slug}.yml`));
     }
   }
 });
@@ -301,7 +334,8 @@ export const {
   blockUpKeyPressed,
   blockDownKeyPressed,
   blockBackspaceKeyPressed,
-  pageIconSelected
+  pageIconSelected,
+  createNewPage
 } = kgraphSlice.actions;
 
 export default kgraphSlice.reducer;

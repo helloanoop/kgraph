@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Mousetrap from 'mousetrap';
+import { useDispatch } from 'react-redux';
 import SearchKgraph from 'components/SearchKgraph';
+import { createNewPage} from 'providers/Store/slices/kgraph'; 
 import { safeTrim, isStringWithAtleastAChar} from 'utils/text';
 
 export const HotkeysContext = React.createContext();
 
 export const HotkeysProvider = props => {
   const router = useRouter();
+  const dispatch = useDispatch();
   const [openSearch, setOpenSearch] = useState(false);
 
   const searchKgraph = () => {
@@ -38,15 +41,13 @@ export const HotkeysProvider = props => {
     if(!page || !isStringWithAtleastAChar(page.title)) {
       return;
     }
-    console.log(page);
 
     if(page.uid) {
       router.push(page.uid);
     } else {
-      // dispatch({
-      //   type: actions.NEW_PAGE,
-      //   title: safeTrim(page.title)
-      // });
+      dispatch(createNewPage({
+        title: safeTrim(page.title)
+      }));
     }
   };
 
