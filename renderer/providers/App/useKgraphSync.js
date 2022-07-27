@@ -3,7 +3,8 @@ import { useDispatch } from 'react-redux';
 import {
   openKgraphEvent,
   addFileEvent,
-  changeFileEvent
+  changeFileEvent,
+  kgraphReadyEvent
 } from 'providers/Store/slices/kgraph';
 
 const useKgraphSync = () => {
@@ -48,20 +49,26 @@ const useKgraphSync = () => {
       }
     };
 
-    const _hypergraphRemoved = (pathname) => {
+    const _kgraphRemoved = (pathname) => {
       // todo
+    };
+
+    const kgraphReady = () => {
+      dispatch(kgraphReadyEvent());
     };
 
     ipcRenderer.invoke('renderer:ready');
 
-    const removeListener1 = ipcRenderer.on('main:hypergraph-opened', _kgraphOpened);
-    const removeListener2 = ipcRenderer.on('main:hypergraph-tree-updated', _kgraphUpdated);
-    const removeListener3 = ipcRenderer.on('main:hypergraph-removed', _hypergraphRemoved);
+    const removeListener1 = ipcRenderer.on('main:kgraph-opened', _kgraphOpened);
+    const removeListener2 = ipcRenderer.on('main:kgraph-tree-updated', _kgraphUpdated);
+    const removeListener3 = ipcRenderer.on('main:kgraph-removed', _kgraphRemoved);
+    const removeListener4 = ipcRenderer.on('main:kgraph-ready', kgraphReady);
 
     return () => {
       removeListener1();
       removeListener2();
       removeListener3();
+      removeListener4();
     };
   }, []);
 };

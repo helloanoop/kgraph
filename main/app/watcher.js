@@ -18,7 +18,7 @@ const add = async (win, pathname, uid) => {
     try {
       const yamlData = fs.readFileSync(pathname, 'utf8');
       file.data = yaml.load(yamlData);
-      win.webContents.send('main:hypergraph-tree-updated', 'addFile', file);
+      win.webContents.send('main:kgraph-tree-updated', 'addFile', file);
     } catch (err) {
       console.error(err)
     }
@@ -32,7 +32,7 @@ const addDirectory = (win, pathname, uid) => {
     pathname,
     name: path.basename(pathname)
   };
-  win.webContents.send('main:hypergraph-tree-updated', 'addDir', directory);
+  win.webContents.send('main:kgraph-tree-updated', 'addDir', directory);
 };
 
 const change = (win, pathname, uid) => {
@@ -46,7 +46,7 @@ const change = (win, pathname, uid) => {
   try {
     const yamlData = fs.readFileSync(pathname, 'utf8');
     file.data = yaml.load(yamlData);
-    win.webContents.send('main:hypergraph-tree-updated', 'change', file);
+    win.webContents.send('main:kgraph-tree-updated', 'change', file);
   } catch (err) {
     console.error(err)
   }
@@ -59,7 +59,7 @@ const unlink = (win, pathname, uid) => {
     pathname,
     name: path.basename(pathname)
   };
-  win.webContents.send('main:hypergraph-tree-updated', 'unlink', file);
+  win.webContents.send('main:kgraph-tree-updated', 'unlink', file);
 }
 
 const unlinkDir = (win, pathname, uid) => {
@@ -69,7 +69,12 @@ const unlinkDir = (win, pathname, uid) => {
     pathname,
     name: path.basename(pathname)
   };
-  win.webContents.send('main:hypergraph-tree-updated', 'unlinkDir', directory);
+  win.webContents.send('main:kgraph-tree-updated', 'unlinkDir', directory);
+}
+
+const ready = (win) => {
+  console.log(`watcher ready`);
+  win.webContents.send('main:kgraph-ready');
 }
 
 class Watcher {
@@ -103,6 +108,7 @@ class Watcher {
         .on('change', pathname => change(win, pathname, uid))
         .on('unlink', pathname => unlink(win, pathname, uid))
         .on('unlinkDir', pathname => unlinkDir(win, pathname, uid))
+        .on('ready', () => ready(win))
   
         self.watchers[watchPath] = watcher;
     }, 100);
@@ -116,7 +122,7 @@ class Watcher {
     if(this.watchers[watchPath]) {
       this.watchers[watchPath].close();
       this.watchers[watchPath] = null;
-      win.webContents.send('main:hypergraph-removed', watchPath);
+      win.webContents.send('main:kgraph-removed', watchPath);
     }
   }
 };

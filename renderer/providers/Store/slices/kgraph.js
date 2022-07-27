@@ -4,6 +4,7 @@ import { slugify } from 'utils/text';
 import {
   dsid,
   loadPageIntoDatascript,
+  createLinkedReferences,
   checkPagerefsAndAddPageIfNotFound
 } from 'utils/datascript';
 import {
@@ -21,6 +22,7 @@ import { createPage, savePage } from 'utils/ipc';
 import { createConnection } from 'utils/datascript';
 import Page from '../models/Page';
 import Block from '../models/Block';
+import each from 'lodash/each';
 
 const initialState = {
   dsConnection: null,
@@ -49,7 +51,8 @@ export const kgraphSlice = createSlice({
         pathname: action.payload.pathname,
         pageMap: new Map(),
         pageSlugMap: new Map(),
-        focusedBlock: {}
+        focusedBlock: {},
+        ready: false
       };
       state.dsConnection = createConnection();
     },
@@ -71,7 +74,11 @@ export const kgraphSlice = createSlice({
         page.dsid = dsid();
         state.kgraph.pageMap.set(page.uid, page);
         state.kgraph.pageSlugMap.set(page.slug, page.uid);
-        loadPageIntoDatascript(state.dsConnection, state.kgraph, page);
+        loadPageIntoDatascript(state.dsConnection, page);
+
+        if(state.kgraph.ready) {
+          createLinkedReferences(state.dsConnection, state.kgraph, page);
+        }
 
         if(state.newlyAddedPageUid === page.uid) {
           state.routeToNewlyAddedPageUid = state.newlyAddedPageUid;
@@ -98,6 +105,14 @@ export const kgraphSlice = createSlice({
           is_outliner: file.data.is_outliner
         })
       }
+    },
+    kgraphReadyEvent: (state, action) => {
+      const kgraph = state.kgraph;
+      const pages = [...kgraph.pageMap];
+      each(pages, ([uid, page], index) => {
+        createLinkedReferences(state.dsConnection, kgraph, page);
+      });
+      kgraph.ready = true;
     },
     pageTitleChanged: (state, action) => {
       const kgraph = state.kgraph;
@@ -324,6 +339,7 @@ export const {
   openKgraphEvent,
   addFileEvent,
   changeFileEvent,
+  kgraphReadyEvent,
   pageTitleChanged,
   focusBlock,
   collapseBlock,

@@ -12,8 +12,8 @@ const openHypergraph = async (win, watcher) => {
     if (isDirectory(resolvedPath)) {
       if(!watcher.hasWatcher(resolvedPath)) {
         const uid = uuid();
-        win.webContents.send('main:hypergraph-opened', resolvedPath, uid);
-        ipcMain.emit('main:hypergraph-opened', win, resolvedPath, uid);
+        win.webContents.send('main:kgraph-opened', resolvedPath, uid);
+        ipcMain.emit('main:kgraph-opened', win, resolvedPath, uid);
       }
     } else {
       console.error(`[ERROR] Cannot open unknown folder: "${resolvedPath}"`);

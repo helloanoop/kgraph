@@ -45,7 +45,7 @@ export const createConnection = () => {
   return connection;
 };
 
-export const loadPageIntoDatascript = (dsConnection, kgraph, page) => {
+export const loadPageIntoDatascript = (dsConnection, page) => {
   // load data into datascript
   let datoms = [];
   datoms.push({
@@ -55,7 +55,9 @@ export const loadPageIntoDatascript = (dsConnection, kgraph, page) => {
     ':page/slug': page.slug
   });
   datascript.transact(dsConnection, datoms);
+};
 
+export const createLinkedReferences = (dsConnection, kgraph, page) => {
   let flattenedBlocks = flattenBlocks(page.blocks);
   let pagerefDatoms = [];
 

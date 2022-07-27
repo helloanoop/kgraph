@@ -47,8 +47,8 @@ const registerIpc = (mainWindow) => {
       await writeFile(path.join(dirPath, 'hypergraph.yml'), content);
 
       const uid = uuid();
-      mainWindow.webContents.send('main:hypergraph-opened', dirPath, uid);
-      ipcMain.emit('main:hypergraph-opened', mainWindow, dirPath, uid);
+      mainWindow.webContents.send('main:kgraph-opened', dirPath, uid);
+      ipcMain.emit('main:kgraph-opened', mainWindow, dirPath, uid);
 
       return;
     } catch (error) {

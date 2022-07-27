@@ -71,14 +71,14 @@ ipcMain.handle('renderer:ready', async (event) => {
     for(let hypergraphPath of lastOpened) {
       if(isDirectory(hypergraphPath)) {
         const uid = uuid();
-        mainWindow.webContents.send('main:hypergraph-opened', hypergraphPath, uid);
-        ipcMain.emit('main:hypergraph-opened', mainWindow, hypergraphPath, uid);
+        mainWindow.webContents.send('main:kgraph-opened', hypergraphPath, uid);
+        ipcMain.emit('main:kgraph-opened', mainWindow, hypergraphPath, uid);
       }
     }
   }
 });
 
-ipcMain.on('main:hypergraph-opened', (win, pathname, uid) => {
+ipcMain.on('main:kgraph-opened', (win, pathname, uid) => {
   watcher.addWatcher(win, pathname, uid);
   lastOpenedHypergraphs.add(pathname);
 });
