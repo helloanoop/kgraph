@@ -1,4 +1,4 @@
-# krgrah
+# kgraph
 A Graph based notetaking app that works on top of a local folder of yml files
 
 ## 👨‍💻 status
