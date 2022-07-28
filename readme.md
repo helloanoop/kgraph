@@ -1,8 +1,7 @@
-# hypergrah
-Notetaking app that works on top of a local folder of yml files
+# krgrah
+A Graph based notetaking app that works on top of a local folder of yml files
 
 ## 👨‍💻 status
 The project is still under active development.
 
-### Copy
-A note taking app that helps you think better.
+To stay notified when the app is ready for public use, please signup for my [newsletter](https://www.getrevue.co/profile/anoop)
