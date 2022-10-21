@@ -1,7 +1,11 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
+# dependencies
 node_modules
+yarn.lock
+pnpm-lock.yaml
+package-lock.json
 .pnp
 .pnp.js
 
