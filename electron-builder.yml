@@ -1,0 +1,34 @@
+appId: com.hellanoop.kgraph
+productName: Kgraph
+electronVersion: 21.1.1
+directories:
+  buildResources: resources
+  output: out
+files:
+  - "main"
+  - "renderer/out"
+mac:
+  artifactName: ${name}_${version}_${arch}_${os}.${ext}
+  category: public.app-category.developer-tools
+  target:
+    - target: dmg
+      arch:
+        - x64
+        - arm64
+    - target: zip
+      arch:
+        - x64
+        - arm64
+  icon: resources/icons/mac/icon.icns
+  hardenedRuntime: true
+  entitlements: resources/entitlements.mac.plist
+  entitlementsInherit: resources/entitlements.mac.plist
+linux:
+  artifactName: ${name}_${version}_${arch}_linux.${ext}
+  icon: resources/icons/png
+  target:
+    - AppImage
+    - deb
+win:
+  artifactName: ${name}_${version}_${arch}_win.${ext}
+  icon: resources/icons/png

@@ -1,20 +1,16 @@
 {
-  "name": "hypergraph",
+  "name": "kgraph",
+  "version": "0.1.0",
+  "descrition": "Yet another note taking app",
   "private": true,
+  "author": "Anoop M D <anoop.md1421@gmail.com>",
   "main": "main/index.js",
   "scripts": {
     "clean": "rimraf dist renderer/.next renderer/out",
     "start": "electron .",
-    "build": "next build renderer && next export renderer",
-    "pack-app": "npm run build && electron-builder --dir",
-    "dist": "npm run build && electron-builder"
-  },
-  "build": {
-    "asar": true,
-    "files": [
-      "main",
-      "renderer/out"
-    ]
+    "build:next": "next build renderer && next export renderer",
+    "pack-app": "electron-builder --dir --mac",
+    "dist": "electron-builder --mac"
   },
   "dependencies": {
     "@braintree/sanitize-url": "^6.0.0",
@@ -76,8 +72,9 @@
     "@babel/runtime": "^7.16.3",
     "babel-loader": "^8.2.3",
     "css-loader": "^6.5.1",
-    "electron": "^17.1.0",
-    "electron-builder": "^22.14.13",
+    "electron": "^21.2.0",
+    "electron-builder": "^23.6.0",
+    "electron-icon-maker": "^0.0.5",
     "file-loader": "^6.2.0",
     "html-loader": "^3.0.1",
     "html-webpack-plugin": "^5.5.0",
